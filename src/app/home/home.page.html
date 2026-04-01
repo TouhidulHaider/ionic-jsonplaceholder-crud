@@ -1,0 +1,21 @@
+@if (showSectionHeader) {
+  <ion-header>
+    <ion-toolbar>
+      <ion-segment [value]="activeSection" (ionChange)="onSectionChange($any($event.detail.value))">
+        <ion-segment-button value="todos">
+          <ion-label>Todos</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="posts">
+          <ion-label>Posts</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-header>
+}
+
+<ion-content class="home-content">
+  <div class="home-shell">
+    <ion-router-outlet></ion-router-outlet>
+  </div>
+</ion-content>
+  

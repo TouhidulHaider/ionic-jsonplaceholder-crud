@@ -1,0 +1,105 @@
+<ion-content class="ion-padding">
+  
+  @if (isLoading$ | async) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Fetching your todos...</p>
+    </div>
+  }
+
+  @if (error$ | async) {
+    <div class="ion-text-center ion-padding">
+      <ion-icon name="alert-circle-outline" color="danger" size="large"></ion-icon>
+      <p>Something went wrong.</p>
+      <ion-button fill="outline" (click)="reload()">Try Again</ion-button>
+    </div>
+  }
+
+  @if (todos$ | async; as todos) {
+    <div class="todo-grid">
+      @for (todo of todos; track todo.id) {
+        <ion-card class="todo-card">
+          <ion-card-content>
+            <div class="todo-title">
+              <!-- {{ todo.title | truncateWords:4 }}   -->
+              {{ todo.title.split(' ').slice(0, 4).join(' ') }}{{ todo.title.split(' ').length > 4 ? '...' : '' }}
+            </div>
+          </ion-card-content>
+
+          <div class="card-footer">
+            <ion-button fill="outline" color="primary" [routerLink]="['/todos', todo.id]"class="view-button">
+              <ion-icon slot="start" name="eye-outline"></ion-icon>
+              View
+            </ion-button>
+
+            <ion-button fill="outline" (click)="deleteTodo(todo.id)" color="danger" class="delete-button">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-card>
+      } @empty {
+        @if (!(isLoading$ | async)) {
+          <div class="ion-text-center ion-padding">
+            <p>No todos found.</p>
+          </div>
+        }
+      }
+    </div>
+  }
+</ion-content>
+
+
+
+<!-- <ion-content class="ion-padding">
+  
+  @if (isLoading$ | async) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Fetching your todos...</p>
+    </div>
+  }
+
+  @if (error$ | async) {
+    <div class="ion-text-center ion-padding">
+      <ion-icon name="alert-circle-outline" color="danger" size="large"></ion-icon>
+      <p>Something went wrong.</p>
+      <ion-button fill="outline" (click)="reload()">Try Again</ion-button>
+    </div>
+  }
+
+  @if (todos$ | async; as todos) {
+    <div class="todo-grid">
+      @for (todo of todos; track todo.id) {
+        <ion-card class="todo-card">
+          <ion-card-header>
+            <div class="header-row">
+              <ion-card-title>{{ todo.title }}</ion-card-title>
+              <ion-badge [color]="todo.completed ? 'success' : 'warning'" mode="ios">
+                {{ todo.completed ? 'Done' : 'Pending' }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+
+          <ion-card-content>
+            </ion-card-content>
+
+          <div class="card-footer">
+            <ion-button fill="clear" (click)="deleteTodo(todo.id)" color="danger">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear">
+              <ion-icon slot="start" name="eye-outline"></ion-icon>
+              View
+            </ion-button>
+          </div>
+        </ion-card>
+      } @empty {
+        @if (!(isLoading$ | async)) {
+          <div class="ion-text-center ion-padding">
+            <p>No todos found.</p>
+          </div>
+        }
+      }
+    </div>
+  }
+</ion-content> -->

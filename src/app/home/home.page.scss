@@ -1,0 +1,54 @@
+:host {
+  --surface-gradient: linear-gradient(180deg, #f7fbff 0%, #eef4fb 100%);
+}
+
+ion-header {
+  // Removes the heavy shadow/border for a flat, modern look
+  --box-shadow: none;
+  // --border-width: 0;
+  // border-bottom: 1px solid rgba(0, 0, 0, 0.058);
+
+  ion-toolbar {
+    // Force white background and dark text
+    --background: #ffffff;
+    --color: #1a1a1a;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+  }
+}
+
+ion-segment {
+  // Container styling
+  background: #f4f5f8;
+  border-radius: 12px;
+  padding: 4px;
+  max-width: 400px; // Keeps it from stretching too wide on desktop
+  margin: 0 auto;   // Centers the segment in the toolbar
+
+  ion-segment-button {
+    // The "Pill" style button
+    --indicator-color: #112bee;
+    --color: #666666;
+    --color-checked: var(--ion-color-primary);
+    --border-radius: 10px;
+    min-height: 40px;
+    font-weight: 600;
+    
+    // Smooth transition for the selection
+    &::part(indicator-background) {
+      box-shadow: 0 2px 8px rgba(16, 16, 16, 0.1);
+    }
+  }
+}
+
+.home-content {
+  // Makes the page body a very light grey so the white header "pops"
+  // --background: #f9fafb;
+  --background: var(--surface-gradient);
+
+  .home-shell {
+    padding: 16px;
+  }
+}

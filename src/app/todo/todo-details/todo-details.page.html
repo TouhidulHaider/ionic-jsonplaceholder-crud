@@ -1,0 +1,63 @@
+<ion-header class="ion-no-border detail-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/todos" fill="clear" aria-label="Back to todos">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Todo Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="detail-container">
+    
+    @if (isLoading$ | async) {
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    } @else if (todo$ | async; as todo) {
+      
+      <ion-card class="details-card">
+        <ion-card-header>
+          <div class="status-wrapper">
+            <ion-badge [color]="todo.completed ? 'success' : 'warning'">
+              {{ todo.completed ? 'Completed' : 'In Progress' }}
+            </ion-badge>
+          </div>
+          <ion-card-title>{{ todo.title }}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <div class="info-row">
+            <span class="label">Task ID:</span>
+            <span class="value">#{{ todo.id }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">User ID:</span>
+            <span class="value">{{ todo.userId }}</span>
+          </div>
+        </ion-card-content>
+
+        <div class="action-footer">
+          <ion-button fill="outline" color="primary" (click)="openEditModal(todo)">
+            <ion-icon slot="start" name="create-outline"></ion-icon>
+            Edit Task
+          </ion-button>
+          
+          <ion-button fill="outline" color="danger" (click)="deleteTodo()">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            Delete
+          </ion-button>
+        </div>
+      </ion-card>
+
+    } @else if (error$ | async) {
+      <div class="error-state">
+        <p>Could not find the requested todo.</p>
+        <ion-button fill="clear" routerLink="/home/todos">Go Back</ion-button>
+      </div>
+    }
+
+  </div>
+</ion-content>
