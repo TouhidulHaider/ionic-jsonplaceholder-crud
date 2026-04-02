@@ -13,14 +13,14 @@ export const routes: Routes = [
         path: 'todos/:id',
         loadComponent: () => import('./todo/todo-details/todo-details.page').then((m) => m.TodoDetailsPage),
       },
-      // {
-      //   path: 'posts',
-      //   loadComponent: () => import('./todo/posts/posts.page').then((m) => m.PostsPage),
-      // },
-      // {
-      //   path: 'posts/:id',
-      //   loadComponent: () => import('./post-details/post-details.page').then((m) => m.PostDetailsPage),
-      // },
+      {
+        path: 'posts',
+        loadComponent: () => import('./post/posts/posts.page').then((m) => m.PostsPage),
+      },
+      {
+        path: 'posts/:id',
+        loadComponent: () => import('./post/post-details/post-details.page').then((m) => m.PostDetailsPage),
+      },
       {
         path: '',
         redirectTo: 'todos',
@@ -41,5 +41,13 @@ export const routes: Routes = [
   {
     path: 'todo-details',
     loadComponent: () => import('./todo/todo-details/todo-details.page').then( m => m.TodoDetailsPage)
+  },
+  {
+    path: 'posts',
+    loadComponent: () => import('./post/posts/posts.page').then( m => m.PostsPage)
+  },
+  {
+    path: 'post-details',
+    loadComponent: () => import('./post/post-details/post-details.page').then( m => m.PostDetailsPage)
   },
 ];

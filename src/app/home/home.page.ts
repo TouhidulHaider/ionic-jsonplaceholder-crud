@@ -50,7 +50,7 @@ export class HomePage implements OnInit {
 
   onSectionChange(section: string | null): void {
     const value = section === 'posts' ? 'posts' : 'todos';
-    this.router.navigate(['/home', value]);
+    this.router.navigate(['/', value]);
   }
 
   private syncSegmentWithRoute(url: string): void {

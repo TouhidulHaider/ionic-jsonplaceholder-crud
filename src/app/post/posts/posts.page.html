@@ -1,0 +1,49 @@
+<ion-content class="ion-padding">
+  
+  @if (isLoading$ | async) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Fetching your posts...</p>
+    </div>
+  }
+
+  @if (error$ | async) {
+    <div class="ion-text-center ion-padding">
+      <ion-icon name="alert-circle-outline" color="danger" size="large"></ion-icon>
+      <p>Something went wrong.</p>
+      <ion-button fill="outline" (click)="reload()">Try Again</ion-button>
+    </div>
+  }
+
+  @if (posts$ | async; as posts) {
+    <div class="post-grid">
+      @for (post of posts; track post.id) {
+        <ion-card class="post-card">
+          <ion-card-content>
+            <div class="post-title">
+              <!-- {{ post.title | truncateWords:4 }}   -->
+              {{ post.title.split(' ').slice(0, 6).join(' ') }}{{ post.title.split(' ').length > 6 ? '...' : '' }}
+            </div>
+          </ion-card-content>
+
+          <div class="card-footer">
+            <ion-button fill="outline" color="primary" [routerLink]="['/posts', post.id]"class="view-button">
+              <ion-icon slot="start" name="eye-outline"></ion-icon>
+              View
+            </ion-button>
+
+            <ion-button fill="outline" (click)="deletePost(post.id)" color="danger" class="delete-button">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-card>
+      } @empty {
+        @if (!(isLoading$ | async)) {
+          <div class="ion-text-center ion-padding">
+            <p>No posts found.</p>
+          </div>
+        }
+      }
+    </div>
+  }
+</ion-content>

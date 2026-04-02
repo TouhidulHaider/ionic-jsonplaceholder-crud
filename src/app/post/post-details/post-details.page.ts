@@ -1,22 +1,37 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonSpinner, IonTitle, IonToolbar, ModalController, ToastController } from '@ionic/angular/standalone';
+import { 
+  IonBadge, 
+  IonButton, 
+  IonButtons, 
+  IonCard, 
+  IonCardContent, 
+  IonCardHeader, 
+  IonCardTitle, 
+  IonContent, 
+  IonHeader, 
+  IonIcon, 
+  IonSpinner, 
+  IonTitle, 
+  IonToolbar, 
+  ModalController, 
+  ToastController 
+} from '@ionic/angular/standalone';
 
 
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, checkmarkCircleOutline, createOutline, trashOutline } from 'ionicons/icons';
-import { EditTodoModalComponent } from '../../components/edit-todo-modal/edit-todo-modal.component';
-import { Todo, TodoUpdate } from '../../models/models';
-import { TodosService } from '../../services/todos/todo.service';
+import { EditPostModalComponent } from '../../components/edit-post-modal/edit-post-modal.component';
+import { Post, PostUpdate } from '../../models/models';
+import { PostsService } from '../../services/posts/post.service';
 
 @Component({
-  selector: 'app-todo-details',
-  templateUrl: './todo-details.page.html',
-  styleUrls: ['./todo-details.page.scss'],
+  selector: 'app-post-details',
+  templateUrl: './post-details.page.html',
+  styleUrls: ['./post-details.page.scss'],
   standalone: true,
-  // Add these to your existing imports array in todo-details.page.ts
   imports: [
     IonContent, 
     IonHeader,
@@ -35,23 +50,21 @@ import { TodosService } from '../../services/todos/todo.service';
     RouterLink
   ],
 })
-
-  
-export class TodoDetailsPage implements OnInit {
+export class PostDetailsPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly todosService = inject(TodosService);
+  private readonly postsService = inject(PostsService);
   private readonly modalController = inject(ModalController);
   private readonly toastController = inject(ToastController);
 
-  readonly todo$ = this.todosService.selectedTodo$;
-  readonly isLoading$ = this.todosService.isLoading$;
-  readonly error$ = this.todosService.error$;
+  readonly post$ = this.postsService.selectedPost$;
+  readonly isLoading$ = this.postsService.isLoading$;
+  readonly error$ = this.postsService.error$;
 
-  private todoId = 0;
+  private postId = 0;
 
-  constructor() {
+  constructor() { 
     addIcons({ arrowBackOutline, checkmarkCircleOutline, createOutline, trashOutline });
   }
 
@@ -59,50 +72,50 @@ export class TodoDetailsPage implements OnInit {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
       const id = Number(params.get('id'));
       if (Number.isNaN(id)) {
-        await this.presentToast('Invalid todo id.');
-        await this.router.navigate(['/todos']);
+        await this.presentToast('Invalid post id.');
+        await this.router.navigate(['/posts']);
         return;
       }
 
-      this.todoId = id;
+      this.postId = id;
       try {
-        await this.todosService.loadTodoById(id);
+        await this.postsService.loadPostById(id);
       } catch {
-        await this.presentToast('Failed to load todo details.');
-        await this.router.navigate(['/todos']);
+        await this.presentToast('Failed to load post details.');
+        await this.router.navigate(['/posts']);
       }
     });
   }
 
-  async openEditModal(todo: Todo): Promise<void> {
+  async openEditModal(post: Post): Promise<void> {
     const modal = await this.modalController.create({
-      component: EditTodoModalComponent,
-      componentProps: { todo },
+      component: EditPostModalComponent,
+      componentProps: { post },
       breakpoints: [0, 0.7, 1],
       initialBreakpoint: 0.7,
     });
 
     await modal.present();
-    const result = await modal.onDidDismiss<TodoUpdate>();
+    const result = await modal.onDidDismiss<PostUpdate>();
     if (result.role !== 'confirm' || !result.data) {
       return;
     }
 
     try {
-      await this.todosService.updateTodo(this.todoId, result.data);
-      await this.presentToast('Todo updated.');
+      await this.postsService.updatePost(this.postId, result.data);
+      await this.presentToast('Post updated.');
     } catch {
-      await this.presentToast('Failed to update todo.');
+      await this.presentToast('Failed to update post.');
     }
   }
 
-  async deleteTodo(): Promise<void> {
+  async deletePost(): Promise<void> {
     try {
-      await this.todosService.deleteTodo(this.todoId);
-      await this.presentToast('Todo deleted.');
-      await this.router.navigate(['/todos']);
+      await this.postsService.deletePost(this.postId);
+      await this.presentToast('Post deleted.');
+      await this.router.navigate(['/posts']);
     } catch {
-      await this.presentToast('Failed to delete todo.');
+      await this.presentToast('Failed to delete this post. Please try again.');
     }
   }
 
@@ -115,4 +128,5 @@ export class TodoDetailsPage implements OnInit {
     });
     await toast.present();
   }
+
 }

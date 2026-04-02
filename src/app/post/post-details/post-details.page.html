@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border detail-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/posts" fill="clear" aria-label="Back to posts">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Post Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="detail-container">
+    
+    @if (isLoading$ | async) {
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    } @else if (post$ | async; as post) {
+      
+      <ion-card class="details-card">
+        <ion-card-header>
+          <ion-card-title>{{ post.title }}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <div class="body-section">
+            <p class="post-body">{{ post.body }}</p>
+          </div>
+
+          <div class="info-row">
+            <span class="label">Post ID:</span>
+            <span class="value">#{{ post.id }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">User ID:</span>
+            <span class="value">{{ post.userId }}</span>
+          </div>
+        </ion-card-content>
+
+        <div class="action-footer">
+          <ion-button fill="outline" color="primary" (click)="openEditModal(post)">
+            <ion-icon slot="start" name="create-outline"></ion-icon>
+            Edit Post
+          </ion-button>
+          
+          <ion-button fill="outline" color="danger" (click)="deletePost()">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            Delete
+          </ion-button>
+        </div>
+      </ion-card>
+
+    } @else if (error$ | async) {
+      <div class="error-state">
+        <p>Could not find the requested post.</p>
+        <ion-button fill="clear" routerLink="/posts">Go Back</ion-button>
+      </div>
+    }
+
+  </div>
+</ion-content>
