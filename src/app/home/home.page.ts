@@ -1,7 +1,8 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { filter } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 import {
   IonContent,
   IonHeader, 
@@ -11,6 +12,8 @@ import {
   IonSegmentButton, 
   IonToolbar
 } from '@ionic/angular/standalone';
+import { PostsService } from '../services/posts/post.service';
+import { TodosService } from '../services/todos/todo.service';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +21,7 @@ import {
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   imports: [
+    AsyncPipe,
     IonContent,
     IonHeader, 
     IonLabel, 
@@ -31,11 +35,20 @@ import {
 export class HomePage implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly todosService = inject(TodosService);
+  private readonly postsService = inject(PostsService);
+
+  readonly todoCount$ = this.todosService.todos$.pipe(map((todos) => todos.length));
+  readonly postCount$ = this.postsService.posts$.pipe(map((posts) => posts.length));
 
   activeSection: 'todos' | 'posts' = 'todos';
   showSectionHeader = true;
 
   ngOnInit(): void {
+    // Preload both lists so segment counts are available immediately.
+    void this.todosService.loadTodos().catch(() => undefined);
+    void this.postsService.loadPosts().catch(() => undefined);
+
     this.syncSegmentWithRoute(this.router.url);
     this.router.events
       .pipe(

@@ -1,8 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { 
-  IonBadge, 
+import {  
   IonButton, 
   IonButtons, 
   IonCard, 
@@ -39,8 +38,7 @@ import { PostsService } from '../../services/posts/post.service';
     IonButtons,
     IonTitle,
     IonButton,  
-    IonIcon,    
-    IonBadge,   
+    IonIcon,       
     IonCard,    
     IonCardHeader, 
     IonCardTitle,  

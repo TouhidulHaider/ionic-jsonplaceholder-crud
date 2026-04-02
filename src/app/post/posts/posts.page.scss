@@ -8,7 +8,9 @@
 
 .post-card {
   // Resetting Ionic defaults for a light theme
-  --background: linear-gradient(180deg, #5286e6 0%, #9dbbdd 100%);
+  // --background: linear-gradient(180deg, #5286e6 0%, #9dbbdd 100%);
+  // --background: linear-gradient(180deg, #A7FFEB   0%, #FFFFFF 100%); // teal to white gradient
+  --background: #D6EAF8; // Solid white background for a clean look
   --color: #0c0c0c;
   
   // Layout and Spacing

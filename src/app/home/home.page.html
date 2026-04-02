@@ -3,10 +3,10 @@
     <ion-toolbar>
       <ion-segment [value]="activeSection" (ionChange)="onSectionChange($any($event.detail.value))">
         <ion-segment-button value="todos">
-          <ion-label>Todos</ion-label>
+          <ion-label>Todos ({{ (todoCount$ | async) ?? 0 }})</ion-label>
         </ion-segment-button>
         <ion-segment-button value="posts">
-          <ion-label>Posts</ion-label>
+          <ion-label>Posts ({{ (postCount$ | async) ?? 0 }})</ion-label>
         </ion-segment-button>
       </ion-segment>
     </ion-toolbar>
