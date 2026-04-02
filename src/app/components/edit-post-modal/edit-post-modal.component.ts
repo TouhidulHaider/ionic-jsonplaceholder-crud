@@ -42,8 +42,10 @@ export class EditPostModalComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     userId: [1, [Validators.required, Validators.min(1)]],
-    title: ['', [Validators.required, Validators.minLength(3)]],
-    body: ['', [Validators.required, Validators.minLength(5)]],
+    // title: ['', [Validators.required, Validators.minLength(3)]],
+    // body: ['', [Validators.required, Validators.minLength(5)]],
+    title: ['', Validators.minLength(1)],
+    body: ['', Validators.minLength(1)],
   });
 
   ngOnInit(): void {
@@ -65,7 +67,19 @@ export class EditPostModalComponent implements OnInit {
       return;
     }
 
-    const payload: PostUpdate = this.form.getRawValue();
+    const formValue = this.form.getRawValue();
+    // Only include fields that have been changed (non-empty values)
+    const payload: Partial<PostUpdate> = {
+      userId: formValue.userId,
+    };
+
+    if (formValue.title.trim()) {
+      payload.title = formValue.title;
+    }
+    if (formValue.body.trim()) {
+      payload.body = formValue.body;
+    }
+
     this.modalController.dismiss(payload, 'confirm');
   }
 }

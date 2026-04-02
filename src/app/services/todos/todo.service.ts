@@ -59,11 +59,26 @@ export class TodosService {
     }
   }
 
-  async updateTodo(id: number, payload: TodoUpdate): Promise<void> {
+  async updateTodo(id: number, payload: Partial<TodoUpdate>): Promise<void> {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
     try {
-      const updated = await firstValueFrom(this.httpApi.put<Todo>(`/todos/${id}`, { id, ...payload }));
+      const current =
+        this.locallyUpdatedTodos.get(id) ??
+        this.selectedTodoSubject.value ??
+        this.todosSubject.value.find((todo) => todo.id === id);
+
+      if (!current) {
+        throw new Error('Todo not found locally for update merge.');
+      }
+
+      const mergedPayload: TodoUpdate = {
+        userId: payload.userId ?? current.userId,
+        title: payload.title ?? current.title,
+        completed: payload.completed ?? current.completed,
+      };
+
+      const updated = await firstValueFrom(this.httpApi.put<Todo>(`/todos/${id}`, { id, ...mergedPayload }));
       this.locallyUpdatedTodos.set(updated.id, updated);
       this.locallyDeletedTodoIds.delete(updated.id);
       this.selectedTodoSubject.next(updated);

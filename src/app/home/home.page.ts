@@ -55,6 +55,9 @@ export class HomePage implements OnInit {
 
   private syncSegmentWithRoute(url: string): void {
     this.activeSection = url.includes('/posts') ? 'posts' : 'todos';
+    // Hide section header when on todo details page
     this.showSectionHeader = !/\/todos\/\d+/.test(url);
+    // Hide section header when on post details page
+    this.showSectionHeader = this.showSectionHeader && !/\/posts\/\d+/.test(url);
   }
 }

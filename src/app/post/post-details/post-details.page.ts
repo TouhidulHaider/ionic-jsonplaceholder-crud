@@ -96,7 +96,7 @@ export class PostDetailsPage implements OnInit {
     });
 
     await modal.present();
-    const result = await modal.onDidDismiss<PostUpdate>();
+    const result = await modal.onDidDismiss<Partial<PostUpdate>>();
     if (result.role !== 'confirm' || !result.data) {
       return;
     }

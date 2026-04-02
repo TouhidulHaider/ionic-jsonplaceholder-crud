@@ -83,7 +83,7 @@ export class TodoDetailsPage implements OnInit {
     });
 
     await modal.present();
-    const result = await modal.onDidDismiss<TodoUpdate>();
+    const result = await modal.onDidDismiss<Partial<TodoUpdate>>();
     if (result.role !== 'confirm' || !result.data) {
       return;
     }

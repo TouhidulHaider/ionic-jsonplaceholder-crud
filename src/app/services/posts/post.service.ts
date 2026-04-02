@@ -26,7 +26,8 @@ export class PostsService {
     this.errorSubject.next(null);
     try {
       const posts = await firstValueFrom(this.httpApi.get<Post[]>('/posts'));
-      this.postsSubject.next(posts);
+      const mergedPosts = this.applyLocalMutations(posts);
+      this.postsSubject.next(mergedPosts);
     } catch (error) {
       this.handleError(error, 'Unable to load posts. Please try again.');
       throw error;
@@ -59,11 +60,26 @@ export class PostsService {
     }
   }
 
-  async updatePost(id: number, payload: PostUpdate): Promise<void> {
+  async updatePost(id: number, payload: Partial<PostUpdate>): Promise<void> {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
     try {
-      const updated = await firstValueFrom(this.httpApi.put<Post>(`/posts/${id}`, { id, ...payload }));
+      const current =
+        this.locallyUpdatedPosts.get(id) ??
+        this.selectedPostSubject.value ??
+        this.postsSubject.value.find((post) => post.id === id);
+
+      if (!current) {
+        throw new Error('Post not found locally for update merge.');
+      }
+
+      const mergedPayload: PostUpdate = {
+        userId: payload.userId ?? current.userId,
+        title: payload.title ?? current.title,
+        body: payload.body ?? current.body,
+      };
+
+      const updated = await firstValueFrom(this.httpApi.put<Post>(`/posts/${id}`, { id, ...mergedPayload }));
       this.locallyUpdatedPosts.set(updated.id, updated);
       this.locallyDeletedPostIds.delete(updated.id);
       this.selectedPostSubject.next(updated);

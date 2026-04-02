@@ -42,7 +42,7 @@ export class EditTodoModalComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     userId: [1, [Validators.required, Validators.min(1)]],
-    title: ['', [Validators.required, Validators.minLength(3)]],
+    title: ['', [Validators.minLength(1)]],
     completed: [false],
   });
 
@@ -65,7 +65,16 @@ export class EditTodoModalComponent implements OnInit {
       return;
     }
 
-    const payload: TodoUpdate = this.form.getRawValue();
+    const formValue = this.form.getRawValue();
+    const payload: Partial<TodoUpdate> = {
+      userId: formValue.userId,
+      completed: formValue.completed,
+    };
+
+    if (formValue.title.trim()) {
+      payload.title = formValue.title;
+    }
+
     this.modalController.dismiss(payload, 'confirm');
   }
 }
